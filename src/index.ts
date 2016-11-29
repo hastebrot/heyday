@@ -18,19 +18,10 @@ if (require.main === module) {
 }
 
 function formatTimetable(entries: [Entry]): string[] {
-  const lines = []
-  lines.push(_.padEnd("", 90, "-"))
-  const row = [
-    _.padEnd("Day", 16),
-    _.padEnd("Notes", 35),
-    _.padStart("Start", 5),
-    _.padStart("End", 7),
-    _.padStart("Duration", 8),
-  ]
-  lines.push(" " + row.join("   "))
-  lines.push(_.padEnd("", 90, "-"))
+  const sortedEntries = _.sortBy(entries, it => moment(it.start).unix)
 
-  entries.forEach((entry, index) => {
+  const rows = []
+  sortedEntries.forEach((entry, index) => {
     const start = moment(entry.start)
     const end = moment(entry.end)
     const duration = moment.duration(end.diff(start))
@@ -42,9 +33,27 @@ function formatTimetable(entries: [Entry]): string[] {
       _.padStart(`- ${end.format("HH:mm")}`, 7),
       _.padStart(`${Math.round(duration.asMinutes())} min`, 8),
     ]
-    lines.push(" " + row.join("   "))
+    rows.push(row)
   })
 
-  lines.push(_.padEnd("", 90, "-"))
+  const rowHeader = [
+    _.padEnd("Day", 16),
+    _.padEnd("Notes", 35),
+    _.padStart("Start", 5),
+    _.padStart("End", 7),
+    _.padStart("Duration", 8),
+  ]
+
+  const lineHeader = " " + rowHeader.join("   ")
+  const lineSeparator = _.padEnd("", lineHeader.length, "-")
+
+  const lines = []
+  lines.push(lineSeparator)
+  lines.push(lineHeader)
+  lines.push(lineSeparator)
+  rows.forEach(row => {
+    lines.push(" " + row.join("   "))
+  })
+  lines.push(lineSeparator)
   return lines
 }
