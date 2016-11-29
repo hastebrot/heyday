@@ -1,0 +1,16 @@
+{
+  "name": "heyday",
+  "version": "1.0.0",
+  "repository": "https://github.com/hastebrot/heyday",
+  "author": "Benjamin Gudehus <hastebrot@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@types/lodash": "^4.14.41",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^0.0.0",
+    "lodash": "^4.17.2",
+    "moment": "^2.17.0",
+    "typescript": "rc"
+  }
+}
