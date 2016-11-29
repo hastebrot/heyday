@@ -1,20 +1,27 @@
 import * as moment from "moment"
 import * as _ from "lodash"
-
-type Entry = {
-  start: string,
-  end: string,
-  notes: string,
-  sheet: string
-};
+import levelup = require("levelup")
+import leveldown = require("leveldown")
 
 if (require.main === module) {
+  const db = levelup("./dist/data.db")
+  db.put("bar", 44, () => {
+    db.get("bar", (err, val) => console.log(err, val))
+  })
+
   const entries: [Entry] = [
     { start: "2013-07-19 08:43:00", end: "2013-07-19 12:30:00", notes: "cleaning everything", sheet: "housekeeping" },
     { start: "2013-07-19 14:01:27", end: "2013-07-19 15:38:41", notes: "saga, part II", sheet: "comic time" },
     { start: "2013-07-19 15:38:59", end: "2013-07-19 17:40:00", notes: "yummy lasagne", sheet: "cooking" },
   ]
   formatTimetable(entries).forEach(it => console.log(it))
+}
+
+type Entry = {
+  start: string,
+  end: string,
+  notes: string,
+  sheet: string
 }
 
 function formatTimetable(entries: [Entry]): string[] {
@@ -44,7 +51,7 @@ function formatTimetable(entries: [Entry]): string[] {
     _.padStart("Duration", 8),
   ]
 
-  const lineHeader = " " + rowHeader.join("   ")
+  const lineHeader = " " + rowHeader.join("   ") + " "
   const lineSeparator = _.padEnd("", lineHeader.length, "-")
 
   const lines = []
@@ -52,7 +59,7 @@ function formatTimetable(entries: [Entry]): string[] {
   lines.push(lineHeader)
   lines.push(lineSeparator)
   rows.forEach(row => {
-    lines.push(" " + row.join("   "))
+    lines.push(" " + row.join("   ") + " ")
   })
   lines.push(lineSeparator)
   return lines
